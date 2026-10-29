@@ -1,0 +1,59 @@
+[
+  {
+    "id": "Q01",
+    "tipo": "Directa",
+    "pregunta": "¿Cuándo procede la modalidad de contratación directa según la normativa colombiana?",
+    "fuente_esperada": "Ley 1150 de 2007",
+    "requiere_sql": false,
+    "requiere_rag": true
+  },
+  {
+    "id": "Q02",
+    "tipo": "Parafraseada",
+    "pregunta": "¿En qué casos una entidad estatal puede contratar sin hacer licitación pública?",
+    "fuente_esperada": "Ley 1150 de 2007",
+    "requiere_sql": false,
+    "requiere_rag": true
+  },
+  {
+    "id": "Q03",
+    "tipo": "Directa",
+    "pregunta": "¿Cuáles son los principios que rigen la contratación estatal en Colombia?",
+    "fuente_esperada": "Ley 80 de 1993",
+    "requiere_sql": false,
+    "requiere_rag": true
+  },
+  {
+    "id": "Q04",
+    "tipo": "SQL",
+    "pregunta": "¿Cuántos contratos de prestación de servicios se firmaron en 2024 en el departamento seleccionado?",
+    "fuente_esperada": "Tabla contratos (SQLite)",
+    "requiere_sql": true,
+    "requiere_rag": false
+  },
+  {
+    "id": "Q05",
+    "tipo": "SQL",
+    "pregunta": "¿Cuáles son los cinco proveedores (personas jurídicas) con mayor valor contratado?",
+    "fuente_esperada": "Tabla contratos (SQLite)",
+    "requiere_sql": true,
+    "requiere_rag": false
+  },
+  {
+    "id": "Q06",
+    "tipo": "Mixta",
+    "pregunta": "¿Cuántos contratos se firmaron por contratación directa y qué exige la ley sobre esta modalidad?",
+    "fuente_esperada": "Tabla contratos (SQLite) + Ley 1150 de 2007",
+    "requiere_sql": true,
+    "requiere_rag": true
+  },
+  {
+    "id": "Q07",
+    "tipo": "Sin respuesta",
+    "pregunta": "¿Cuál fue el contrato público más barato firmado en Francia durante 2024?",
+    "fuente_esperada": "Rechazo controlado (fuera del corpus/datos)",
+    "requiere_sql": false,
+    "requiere_rag": false
+  }
+]
+
