@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import json
+from pathlib import Path
 from typing import Any
 import pandas as pd
 import requests
 
 from observatorio.config import (
+    RAW_CSV_PATH,
+    RAW_METADATA_PATH,
     SOCRATA_DATASET_ID,
     SOCRATA_APP_TOKEN,
     SECOP_DEPARTAMENTO,
@@ -57,10 +61,13 @@ def descargar_subconjunto_secop(
     fecha_fin: str = SECOP_FECHA_FIN,
     batch_size: int = 10000,
     max_records: int = 100000,
+    guardar_csv: bool = True,
+    ruta_csv: Path = RAW_CSV_PATH,
+    ruta_metadatos: Path = RAW_METADATA_PATH,
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
     """
-    Descarga de forma paginada el subconjunto de contratos desde la API Socrata
-    y registra la fecha exacta de consulta para trazabilidad.
+    Descarga de forma paginada el subconjunto de contratos desde la API Socrata,
+    registra la fecha exacta de consulta y guarda el archivo CSV original en `data/raw/`.
     """
     endpoint = construir_endpoint_socrata()
     headers: dict[str, str] = {}
@@ -96,13 +103,24 @@ def descargar_subconjunto_secop(
             break
 
     df = pd.DataFrame(registros)
-    metadatos_descarga = {
+    metadatos_descarga: dict[str, Any] = {
         "fecha_consulta_utc": fecha_consulta,
         "departamento": departamento,
         "fecha_inicio": fecha_inicio,
         "fecha_fin": fecha_fin,
         "total_registros_descargados": len(df),
+        "columnas_descargadas": list(df.columns),
         "dataset_id": SOCRATA_DATASET_ID,
+        "ruta_csv_original": str(ruta_csv) if guardar_csv else None,
     }
-    return df, metadatos_descarga
 
+    if guardar_csv:
+        ruta_csv.parent.mkdir(parents=True, exist_ok=True)
+        df.to_csv(ruta_csv, index=False, encoding="utf-8-sig")
+        ruta_metadatos.parent.mkdir(parents=True, exist_ok=True)
+        ruta_metadatos.write_text(
+            json.dumps(metadatos_descarga, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+
+    return df, metadatos_descarga

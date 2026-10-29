@@ -1,33 +1,29 @@
-# 📋 Ficha Técnica del Modelo (Model Card) — Estimación de Riesgo de Prórroga
+# Ficha de Transparencia del Modelo (Model Card)
 
-## 1. Detalles del Modelo
-- **Nombre:** Clasificador de Riesgo de Prórroga en Contratos Públicos (SECOP II)
-- **Tipo de problema:** Clasificación binaria supervisada (`prorroga = 1` si `dias_adicionados > 0`, `0` en caso contrario).
-- **Algoritmos evaluados:** `DummyClassifier` (Baseline), `LogisticRegression`, `RandomForestClassifier`, `HistGradientBoostingClassifier`.
-- **Artefacto exportado:** `models/pipeline_prorrogas.joblib`
+## 1. Resumen General
+- **Propósito:** Estimar, a partir de las condiciones conocidas el día en que se firma un contrato en SECOP II, la probabilidad de que requiera una prórroga de plazo (`dias_adicionados > 0`).
+- **Enfoque:** Clasificación binaria supervisada comparando una línea base frente a modelos clásicos interpretables (`LogisticRegression`, `RandomForestClassifier`, `HistGradientBoostingClassifier`).
+- **Archivo del modelo:** `models/pipeline_prorrogas.joblib`
 
-## 2. Uso Previsto (Intended Use)
-- **Propósito:** Ayudar a veedurías ciudadanas, periodistas de datos y equipos de control interno a priorizar qué contratos revisar preventivamente a partir de las características conocidas al momento de la firma.
-- **Usuarios objetivo:** Ciudadanos, analistas y auditores no técnicos a través de la interfaz Streamlit.
+## 2. ¿Para qué sirve esta herramienta?
+- Ayudar a **veedurías ciudadanas, periodistas de datos y equipos de control interno** a priorizar qué contratos revisar preventivamente dentro de un volumen de decenas de miles de registros.
+- Ofrecer una interfaz clara donde cualquier persona pueda explorar qué factores contractuales se asocian históricamente con mayores tiempos de ejecución.
 
-## 3. Usos NO Recomendados (Out-of-Scope Uses)
-- ⚠️ **No constituye evidencia de corrupción, incumplimiento ni ilegalidad.** Una prórroga puede responder a causas técnicas o administrativas justificadas.
-- **No debe usarse para tomar decisiones sancionatorias automatizadas** ni para descalificar proveedores o entidades públicas.
+## 3. ¿Para qué NO debe utilizarse?
+- ⚠️ **No es un detector de irregularidades ni de corrupción:** Que un contrato tenga una alta probabilidad de prórroga (o que efectivamente se prorrogue) puede obedecer a causas técnicas, climáticas o administrativas plenamente justificadas.
+- **No reemplaza la revisión documental:** Nunca debe usarse para emitir juicios o sanciones automáticas sobre entidades públicas o contratistas.
 
-## 4. Datos de Entrenamiento y Evaluación
-- **Fuente:** SECOP II – Contratos Electrónicos (`datos.gov.co`, ID: `jbjy-vk9h`), Colombia Compra Eficiente.
-- **Licencia de los datos:** CC BY-SA 4.0.
-- **Estrategia de validación:** Partición temporal estricta (entrenamiento en periodo histórico y prueba en el periodo más reciente) para evitar fuga de información temporal.
-- **Prevención de Data Leakage:** Se excluyen estrictamente variables post-firma (`valor_pagado`, `estado_contrato`, `liquidaci_n`, `reversion`, etc.) y datos personales/bancarios.
+## 4. Datos y Criterios de Entrenamiento
+- **Fuente oficial:** *SECOP II – Contratos Electrónicos* (`datos.gov.co`, ID: `jbjy-vk9h`), Colombia Compra Eficiente. Licencia **CC BY-SA 4.0**.
+- **Validación en el tiempo:** El modelo se entrena con contratos históricos y se evalúa sobre los contratos más recientes, simulando un escenario real de predicción hacia adelante.
+- **Cero información futura:** Se excluyen todas las columnas que reflejan eventos posteriores a la firma (como pagos realizados, saldos o fechas de liquidación), así como cualquier dato personal o bancario.
 
-## 5. Métricas de Desempeño (Conjunto de Prueba Temporal)
-*(Se completa automáticamente al exportar los resultados desde la Etapa 3/4 del Notebook)*
-- **F1-Score (Clase Positiva):** Pendiente de ejecución
-- **PR-AUC (Average Precision):** Pendiente de ejecución
-- **ROC-AUC:** Pendiente de ejecución
+## 5. Desempeño en el Periodo de Prueba
+*(Se actualiza al exportar los resultados desde el Notebook)*
+- **F1-Score (Contratos con prórroga):** Pendiente de actualización
+- **PR-AUC (Precisión vs. Exhaustividad):** Pendiente de actualización
+- **ROC-AUC:** Pendiente de actualización
 
-## 6. Límites Conocidos y Consideraciones Éticas
-- El dataset tabular no incluye los pliegos de condiciones ni las actas físicas adjuntas al expediente electrónico.
-- Pueden existir rezagos entre la firma real del contrato y su registro o actualización en la plataforma SECOP II.
-- Toda revisión debe contrastarse en el enlace oficial del proceso (`urlproceso`).
-
+## 6. Limitaciones a Tener en Cuenta
+- El conjunto de datos tabular resume las condiciones del contrato, pero no incluye los documentos PDF adjuntos (estudios previos, pliegos o actas de supervisión).
+- Toda consulta o alerta debe verificarse directamente en el proceso oficial mediante el enlace `urlproceso`.

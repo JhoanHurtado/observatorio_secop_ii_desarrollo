@@ -1,94 +1,91 @@
-# 🏛️ Observatorio Ciudadano de Contratación Pública (SECOP II)
+# Observatorio Ciudadano de Contratación Pública (SECOP II)
 
-**Asistente Híbrido en la Nube (RAG + SQL) y Modelo de Machine Learning Clásico sobre Datos Abiertos de Contratación Estatal en Colombia**
+**Inteligencia Artificial y Datos Abiertos para Consultar Contratos Estatales, Contrastar la Ley y Estimar el Riesgo de Prórrogas**
 
 ---
 
-## 🎯 Descripción del Proyecto
+## ¿Por qué nace este proyecto?
 
-La contratación pública concentra una parte fundamental del presupuesto estatal, pero el volumen del dataset abierto de **SECOP II** (millones de registros y 87 columnas) junto con la complejidad del marco jurídico colombiano dificultan la consulta ciudadana.
+En Colombia, la contratación pública representa uno de los principales canales de ejecución del presupuesto estatal. Aunque el portal **SECOP II** publica la información como datos abiertos de forma diaria, enfrentarse a millones de filas, decenas de variables técnicas y un marco jurídico extenso hace que responder preguntas sencillas o detectar contratos que requieren seguimiento sea una tarea compleja para ciudadanos, veedurías y periodistas de datos.
 
-Este proyecto construye un **Observatorio Ciudadano de Contratación Pública** dividido en dos componentes complementarios que comparten una misma fuente de datos curada:
+Este proyecto construye un **Observatorio Ciudadano de Contratación Pública** que transforma esos datos abiertos y la normativa vigente en dos herramientas accesibles desde una misma aplicación interactiva:
 
-| Componente | Qué resuelve | Stack Tecnológico |
+| Herramienta | ¿Qué permite hacer? | Tecnologías principales |
 | :--- | :--- | :--- |
-| **A. Asistente en la Nube (RAG + SQL)** | Responde preguntas en lenguaje natural combinando cifras exactas (**SQLite**) y normativa vigente (**Qdrant Cloud**), citando artículos y fuentes verificables. | `SQLite`, `Qdrant Cloud`, `Gemini Embedding 2` (768 dim), `LangChain Splitters`, `Streamlit` |
-| **B. Machine Learning Clásico** | Estima al momento de la firma la probabilidad de que un contrato requiera **prórroga de plazo** (`dias_adicionados > 0`), sin fuga de información y con validación temporal. | `scikit-learn`, `pandas`, `joblib`, `plotly`, `Streamlit` |
+| **A. Asistente Híbrido (RAG + SQL)** | Responder preguntas en lenguaje cotidiano combinando cifras reales de contratos (**SQLite**) con artículos exactos de la ley y manuales oficiales (**Qdrant Cloud**), citando siempre la fuente. | `SQLite`, `Qdrant Cloud`, `Gemini Embedding 2`, `LangChain`, `Streamlit` |
+| **B. Predictor de Riesgo de Prórrogas (ML)** | Estimar, con la información disponible el día en que se firma un contrato, la probabilidad de que requiera una prórroga de plazo (`dias_adicionados > 0`) para priorizar su revisión preventiva. | `scikit-learn`, `pandas`, `joblib`, `plotly`, `Streamlit` |
 
-> ⚠️ **Aviso de Uso Responsable:** Los resultados de este sistema describen patrones estadísticos e informativos para priorizar la revisión humana. **No constituyen evidencia de irregularidades, incumplimientos ni corrupción.** Toda alerta debe verificarse en el expediente electrónico oficial mediante el enlace `urlproceso`.
+> ⚠️ **Uso responsable:** Los resultados de este observatorio muestran patrones estadísticos orientativos para apoyar la revisión humana. **No constituyen evidencia de irregularidades, incumplimientos ni corrupción.** Cualquier hallazgo debe contrastarse directamente en el expediente electrónico oficial a través del enlace `urlproceso`.
 
 ---
 
-## 📂 Estructura del Repositorio
+## Organización del Proyecto
 
 ```text
 observatorio_secop_ii_desarrollo/
-├── .env.example                          # Plantilla de variables de entorno (sin claves)
-├── requirements.txt                      # Dependencias con versiones fijas
-├── pyproject.toml                        # Configuración del paquete instalable `observatorio`
-├── observatorio_secop_ii_desarrollo.ipynb # Notebook maestro de desarrollo y experimentación
+├── .env.example                          # Plantilla de configuración (variables de entorno)
+├── FLUJO_DE_TRABAJO.md                   # Guía de cómo se conectan los módulos y etapas
+├── requirements.txt                      # Librerías necesarias para ejecutar el proyecto
+├── pyproject.toml                        # Configuración del paquete interno `observatorio`
 │
 ├── data/
-│   ├── corpus_normativo/                 # Ley 80/1993, Ley 1150/2007 y Decreto 1082/2015 en Markdown
-│   ├── raw/                              # Descargas crudas vía API Socrata
-│   ├── processed/                        # Base SQLite limpia (`secop_contratos.sqlite`) y embeddings
-│   └── evaluation/                       # Banco de 10-15 preguntas de validación RAG
+│   ├── corpus_rag_normativo/             # Leyes, decretos y guías de Colombia Compra Eficiente
+│   │   ├── 01_leyes/                     # Ley 80/1993, Ley 1150/2007 y Ley 1712/2014
+│   │   ├── 02_decretos_y_regulaciones/   # Decreto 1082/2015 y Circular Externa Única CCE
+│   │   ├── 03_guias_y_manuales_cce/      # Diccionario de Datos, Manual de Datos Abiertos y Guías SECOP II
+│   │   └── 04_markdown_procesado/        # Textos normativos estructurados para búsqueda semántica
+│   ├── raw/                              # Datos originales descargados desde la API de datos.gov.co
+│   ├── processed/                        # Datos limpios (CSV y base SQLite) sin información personal
+│   └── evaluation/                       # Banco de preguntas para validar la precisión del asistente
 │
 ├── models/
-│   ├── pipeline_prorrogas.joblib         # Pipeline scikit-learn serializado
-│   ├── model_metadata.json               # Metadatos, umbrales y métricas en prueba temporal
-│   └── MODEL_CARD.md                     # Ficha técnica del modelo (RF-ML8)
+│   ├── pipeline_prorrogas.joblib         # Modelo entrenado listo para usar en la aplicación
+│   ├── model_metadata.json               # Métricas de desempeño y parámetros de referencia
+│   └── MODEL_CARD.md                     # Ficha de transparencia, alcances y límites del modelo
+│
+├── notebooks/
+│   └── observatorio_secop_ii_desarrollo.ipynb # Desarrollo paso a paso: datos, RAG y Machine Learning
 │
 ├── src/
-│   └── observatorio/                     # Paquete modular compartido entre Notebook y Streamlit
-│       ├── config.py                     # Variables de entorno, rutas y semillas de reproducibilidad
-│       ├── data/                         # Ingesta API Socrata, limpieza PII y SQLite seguro
-│       ├── rag/                          # Chunking por artículo, Qdrant Cloud y orquestador RAG+SQL
-│       └── ml/                           # Selección de variables sin leakage, pipeline e inferencia
+│   └── observatorio/                     # Módulos de Python reutilizados por el Notebook y la App
+│       ├── config.py                     # Rutas y configuración general
+│       ├── data/                         # Descarga desde API Socrata, limpieza y base SQLite
+│       ├── rag/                          # Fragmentación de leyes, vectores en Qdrant y asistente
+│       └── ml/                           # Selección de variables, entrenamiento y predicción
 │
 ├── apps/
-│   ├── Home.py                           # Punto de entrada principal de la aplicación Streamlit
-│   ├── rag_app.py                        # Interfaz del Asistente RAG + SQL
-│   ├── ml_app.py                         # Interfaz de Exploración y Predicción de Prórrogas (4 pestañas)
-│   └── ui_utils.py                       # Componentes visuales, avisos legales y control de sesión
+│   ├── Home.py                           # Aplicación principal en Streamlit
+│   ├── rag_app.py                        # Vista del Asistente de Consulta (Chat RAG + SQL)
+│   ├── ml_app.py                         # Vista de Exploración y Simulador de Prórrogas
+│   └── ui_utils.py                       # Elementos visuales y avisos de atribución
 │
-└── tests/                                # Pruebas unitarias de seguridad SQL y prevención de leakage
+└── tests/                                # Pruebas automatizadas de seguridad y calidad de datos
 ```
 
 ---
 
-## 🚀 Instalación y Ejecución Local
+## Cómo Ejecutarlo en tu Equipo
 
-1. **Clonar el repositorio y crear el entorno virtual:**
-   ```bash
+1. **Crear y activar el entorno virtual:**
+   ```powershell
    python -m venv .venv
-   # En Windows (PowerShell):
    .\.venv\Scripts\Activate.ps1
-   pip install -r requirements.txt
-   pip install -e .
+   python -m pip install -r requirements.txt
+   python -m pip install -e .
    ```
 
-2. **Configurar las variables de entorno:**
-   ```bash
-   cp .env.example .env
-   # Edita .env con tus claves de GEMINI_API_KEY y QDRANT_API_KEY
-   ```
+2. **Configurar tus credenciales:**
+   Copia el archivo `.env.example` como `.env` y agrega tus claves gratuitas de **Google AI Studio (`GEMINI_API_KEY`)** y **Qdrant Cloud (`QDRANT_URL`, `QDRANT_API_KEY`)**.
 
-3. **Ejecutar la aplicación Streamlit:**
-   ```bash
-   streamlit run apps/Home.py
-   ```
-
-4. **Ejecutar las pruebas de seguridad e integridad:**
-   ```bash
-   pytest
+3. **Lanzar la aplicación web:**
+   ```powershell
+   python -m streamlit run apps/Home.py
    ```
 
 ---
 
-## 📜 Licencia y Atribución de Datos (CC BY-SA 4.0)
+## Fuente de Datos y Licencia (CC BY-SA 4.0)
 
-* **Código fuente:** Distribuido bajo licencia **MIT** (ver archivo `LICENSE`).
-* **Datos derivados:**
-  > Datos originarios de *«SECOP II – Contratos Electrónicos»*, Colombia Compra Eficiente (Agencia Nacional de Contratación Pública), Portal Nacional de Datos Abiertos (`https://www.datos.gov.co/Estad-sticas-Nacionales/SECOP-II-Contratos-Electr-nicos/jbjy-vk9h`). Licencia: **CC BY-SA 4.0** (`https://creativecommons.org/licenses/by-sa/4.0/`). Modificaciones: filtrado departamental y temporal, limpieza de datos personales y generación de variables derivadas. Este proyecto es ciudadano e independiente y **no está afiliado ni respaldado por Colombia Compra Eficiente**.
-
+* **Código del proyecto:** Distribuido bajo licencia **MIT** (ver [LICENSE](LICENSE)).
+* **Datos abiertos y derivados:**
+  > Datos originarios de *«SECOP II – Contratos Electrónicos»*, publicados por Colombia Compra Eficiente (Agencia Nacional de Contratación Pública) en el Portal Nacional de Datos Abiertos (`https://www.datos.gov.co/Estad-sticas-Nacionales/SECOP-II-Contratos-Electr-nicos/jbjy-vk9h`). Licencia: **CC BY-SA 4.0** (`https://creativecommons.org/licenses/by-sa/4.0/`). Los datos fueron filtrados por departamento y periodo, depurados para proteger datos personales y estructurados para análisis estadístico. Este proyecto es una iniciativa ciudadana e independiente y **no está afiliado ni respaldado por Colombia Compra Eficiente**.

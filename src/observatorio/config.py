@@ -17,13 +17,21 @@ RANDOM_SEED: int = 42
 
 # Directorios de datos y modelos
 DATA_DIR: Path = PROJECT_ROOT / "data"
-CORPUS_DIR: Path = DATA_DIR / "corpus_normativo"
+CORPUS_DIR: Path = DATA_DIR / "corpus_rag_normativo"
+CORPUS_LEYES_DIR: Path = CORPUS_DIR / "01_leyes"
+CORPUS_DECRETOS_DIR: Path = CORPUS_DIR / "02_decretos_y_regulaciones"
+CORPUS_GUIAS_DIR: Path = CORPUS_DIR / "03_guias_y_manuales_cce"
+CORPUS_MARKDOWN_DIR: Path = CORPUS_DIR / "04_markdown_procesado"
+
 RAW_DATA_DIR: Path = DATA_DIR / "raw"
 PROCESSED_DATA_DIR: Path = DATA_DIR / "processed"
 EVALUATION_DIR: Path = DATA_DIR / "evaluation"
 MODELS_DIR: Path = PROJECT_ROOT / "models"
 
-# Archivos principales
+# Archivos principales (CSVs de validación, SQLite y artefactos ML)
+RAW_CSV_PATH: Path = RAW_DATA_DIR / "secop_contratos_original.csv"
+RAW_METADATA_PATH: Path = RAW_DATA_DIR / "metadatos_descarga.json"
+CLEAN_CSV_PATH: Path = PROCESSED_DATA_DIR / "secop_contratos_limpio.csv"
 SQLITE_DB_PATH: Path = PROCESSED_DATA_DIR / "secop_contratos.sqlite"
 MODEL_ARTIFACT_PATH: Path = MODELS_DIR / "pipeline_prorrogas.joblib"
 MODEL_METADATA_PATH: Path = MODELS_DIR / "model_metadata.json"
