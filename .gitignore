@@ -1,0 +1,37 @@
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Entornos virtuales y caché de Python
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.installed.cfg
+dist/
+build/
+
+# Datos crudos pesados y bases de datos locales (opcional según política de repositorio)
+data/raw/*.csv
+data/raw/*.json
+data/raw/*.parquet
+data/processed/*.sqlite
+data/processed/*.db
+data/processed/*.npy
+
+# Checkpoints de Jupyter
+.ipynb_checkpoints/
+
+# Pruebas y herramientas IDE
+.pytest_cache/
+.coverage
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "observatorio-secop-ii"
+version = "0.1.0"
+description = "Observatorio ciudadano de contratación pública sobre SECOP II: Asistente híbrido RAG + SQL y Modelo de Machine Learning clásico."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Proyecto de Portafolio" }
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
