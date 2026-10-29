@@ -1,4 +1,4 @@
-# 📚 Biblioteca Normativa y Documental del Asistente RAG
+# Biblioteca Normativa y Documental del Asistente RAG
 
 Esta carpeta reúne las leyes, decretos y guías oficiales que alimentan la memoria documental del **Asistente de Contratación Pública** en `Qdrant Cloud`, organizadas según su nivel normativo:
 

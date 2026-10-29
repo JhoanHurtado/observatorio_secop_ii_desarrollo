@@ -1,4 +1,4 @@
-# 📋 Ficha de Transparencia del Modelo (Model Card)
+# Ficha de Transparencia del Modelo (Model Card)
 
 ## 1. Resumen General
 - **Propósito:** Estimar, a partir de las condiciones conocidas el día en que se firma un contrato en SECOP II, la probabilidad de que requiera una prórroga de plazo (`dias_adicionados > 0`).

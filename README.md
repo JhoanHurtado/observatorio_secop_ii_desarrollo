@@ -1,10 +1,10 @@
-# 🏛️ Observatorio Ciudadano de Contratación Pública (SECOP II)
+# Observatorio Ciudadano de Contratación Pública (SECOP II)
 
 **Inteligencia Artificial y Datos Abiertos para Consultar Contratos Estatales, Contrastar la Ley y Estimar el Riesgo de Prórrogas**
 
 ---
 
-## 🌍 ¿Por qué nace este proyecto?
+## ¿Por qué nace este proyecto?
 
 En Colombia, la contratación pública representa uno de los principales canales de ejecución del presupuesto estatal. Aunque el portal **SECOP II** publica la información como datos abiertos de forma diaria, enfrentarse a millones de filas, decenas de variables técnicas y un marco jurídico extenso hace que responder preguntas sencillas o detectar contratos que requieren seguimiento sea una tarea compleja para ciudadanos, veedurías y periodistas de datos.
 
@@ -12,14 +12,14 @@ Este proyecto construye un **Observatorio Ciudadano de Contratación Pública** 
 
 | Herramienta | ¿Qué permite hacer? | Tecnologías principales |
 | :--- | :--- | :--- |
-| **🧠 A. Asistente Híbrido (RAG + SQL)** | Responder preguntas en lenguaje cotidiano combinando cifras reales de contratos (**SQLite**) con artículos exactos de la ley y manuales oficiales (**Qdrant Cloud**), citando siempre la fuente. | `SQLite`, `Qdrant Cloud`, `Gemini Embedding 2`, `LangChain`, `Streamlit` |
-| **📈 B. Predictor de Riesgo de Prórrogas (ML)** | Estimar, con la información disponible el día en que se firma un contrato, la probabilidad de que requiera una prórroga de plazo (`dias_adicionados > 0`) para priorizar su revisión preventiva. | `scikit-learn`, `pandas`, `joblib`, `plotly`, `Streamlit` |
+| **A. Asistente Híbrido (RAG + SQL)** | Responder preguntas en lenguaje cotidiano combinando cifras reales de contratos (**SQLite**) con artículos exactos de la ley y manuales oficiales (**Qdrant Cloud**), citando siempre la fuente. | `SQLite`, `Qdrant Cloud`, `Gemini Embedding 2`, `LangChain`, `Streamlit` |
+| **B. Predictor de Riesgo de Prórrogas (ML)** | Estimar, con la información disponible el día en que se firma un contrato, la probabilidad de que requiera una prórroga de plazo (`dias_adicionados > 0`) para priorizar su revisión preventiva. | `scikit-learn`, `pandas`, `joblib`, `plotly`, `Streamlit` |
 
 > ⚠️ **Uso responsable:** Los resultados de este observatorio muestran patrones estadísticos orientativos para apoyar la revisión humana. **No constituyen evidencia de irregularidades, incumplimientos ni corrupción.** Cualquier hallazgo debe contrastarse directamente en el expediente electrónico oficial a través del enlace `urlproceso`.
 
 ---
 
-## 🗂️ Organización del Proyecto
+## Organización del Proyecto
 
 ```text
 observatorio_secop_ii_desarrollo/
@@ -64,7 +64,7 @@ observatorio_secop_ii_desarrollo/
 
 ---
 
-## 🚀 Cómo Ejecutarlo en tu Equipo
+## Cómo Ejecutarlo en tu Equipo
 
 1. **Crear y activar el entorno virtual:**
    ```powershell
@@ -84,7 +84,7 @@ observatorio_secop_ii_desarrollo/
 
 ---
 
-## 📜 Fuente de Datos y Licencia (CC BY-SA 4.0)
+## Fuente de Datos y Licencia (CC BY-SA 4.0)
 
 * **Código del proyecto:** Distribuido bajo licencia **MIT** (ver [LICENSE](LICENSE)).
 * **Datos abiertos y derivados:**
