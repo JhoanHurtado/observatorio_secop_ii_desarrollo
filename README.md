@@ -131,15 +131,9 @@ streamlit run apps/Home.py
 
 ---
 
-## Documentación y Publicaciones Complementarias
+## Ficha Técnica del Modelo (Model Card)
 
-| Documento | Descripción |
-| :--- | :--- |
-| **[`MODEL_CARD.md`](MODEL_CARD.md)** | Ficha técnica formal del modelo predictivo según el estándar de Mitchell et al. (arquitectura, métricas, sesgos y consideraciones éticas). |
-| **[`DEPLOYMENT_GUIDE.md`](DEPLOYMENT_GUIDE.md)** | Guía paso a paso para desplegar la aplicación de forma gratuita en **Streamlit Community Cloud** o **Hugging Face Spaces** para exhibir en portafolio. |
-| **[`BLOG_POST.md`](BLOG_POST.md)** | Artículo técnico y metodológico en profundidad en español, listo para publicar en blog personal, Medium o Dev.to. |
-| **[`BLOG_POST_EN.md`](BLOG_POST_EN.md)** | Versión completa en inglés del artículo técnico y metodológico (Technical Blog Post / Paper). |
-| **[`LINKEDIN_POST.md`](LINKEDIN_POST.md)** | Publicación optimizada para LinkedIn con gancho profesional, síntesis técnica, métricas verificables y hashtags estratégicos. |
+Para consultar la arquitectura detallada del clasificador predictivo, métricas de rendimiento en partición temporal estricta (*Out-of-Time*), análisis de sesgos, limitaciones y consideraciones éticas según el estándar de Mitchell et al., consulta el documento [`MODEL_CARD.md`](MODEL_CARD.md).
 
 ---
 
