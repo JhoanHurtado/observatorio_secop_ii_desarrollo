@@ -9,8 +9,8 @@ from dotenv import load_dotenv
 # Raíz del repositorio (2 niveles arriba de src/observatorio/config.py)
 PROJECT_ROOT: Path = Path(__file__).resolve().parents[2]
 
-# Cargar variables de entorno desde .env si existe
-load_dotenv(PROJECT_ROOT / ".env")
+# Cargar variables de entorno desde .env si existe (override=True para recargar cambios en Jupyter)
+load_dotenv(PROJECT_ROOT / ".env", override=True)
 
 # Semilla global de reproducibilidad (RF-ML / RNF)
 RANDOM_SEED: int = 42
@@ -33,6 +33,7 @@ RAW_CSV_PATH: Path = RAW_DATA_DIR / "secop_contratos_original.csv"
 RAW_METADATA_PATH: Path = RAW_DATA_DIR / "metadatos_descarga.json"
 CLEAN_CSV_PATH: Path = PROCESSED_DATA_DIR / "secop_contratos_limpio.csv"
 SQLITE_DB_PATH: Path = PROCESSED_DATA_DIR / "secop_contratos.sqlite"
+EMBEDDINGS_BACKUP_PATH: Path = PROCESSED_DATA_DIR / "embeddings_normativa.parquet"
 MODEL_ARTIFACT_PATH: Path = MODELS_DIR / "pipeline_prorrogas.joblib"
 MODEL_METADATA_PATH: Path = MODELS_DIR / "model_metadata.json"
 
@@ -49,10 +50,15 @@ QDRANT_API_KEY: str | None = os.getenv("QDRANT_API_KEY")
 QDRANT_COLLECTION_NAME: str = os.getenv("QDRANT_COLLECTION_NAME", "normativa_contratacion")
 
 GEMINI_API_KEY: str | None = os.getenv("GEMINI_API_KEY")
-GEMINI_EMBEDDING_MODEL: str = os.getenv("GEMINI_EMBEDDING_MODEL", "models/gemini-embedding-exp-03-07")
+GEMINI_EMBEDDING_MODEL: str = os.getenv("GEMINI_EMBEDDING_MODEL", "models/gemini-embedding-001")
 GEMINI_LLM_MODEL: str = os.getenv("GEMINI_LLM_MODEL", "gemini-2.5-flash")
 EMBEDDING_DIMENSION: int = 768
 
+# Modelo de embeddings local (fallback o por bandera)
+MODELO_EMBEDDING_LOCAL: str = os.getenv("MODELO_EMBEDDING_LOCAL", "sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
+USAR_EMBEDDINGS_LOCAL: bool = os.getenv("USAR_EMBEDDINGS_LOCAL", "false").lower() in ("true", "1", "yes")
+
 # Límites de seguridad para consultas y demo pública
+MAX_REINTENTOS: int = int(os.getenv("MAX_REINTENTOS", "10"))
 MAX_QUERIES_PER_SESSION: int = int(os.getenv("MAX_QUERIES_PER_SESSION", "15"))
 SQL_MAX_ROWS_LIMIT: int = int(os.getenv("SQL_MAX_ROWS_LIMIT", "100"))

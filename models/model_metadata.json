@@ -1,0 +1,45 @@
+{
+  "modelo": "Gradient Boosting (ajustado)",
+  "fecha_entrenamiento": "2026-11-01T00:38:01",
+  "features_numericas": [
+    "valor_contrato_log",
+    "mes_firma",
+    "anio_firma",
+    "duracion_planeada_dias"
+  ],
+  "features_categoricas": [
+    "tipo_de_contrato",
+    "modalidad_de_contratacion",
+    "sector",
+    "rama",
+    "orden",
+    "departamento",
+    "es_pyme",
+    "es_grupo",
+    "habilita_pago_adelantado",
+    "origen_de_los_recursos",
+    "segmento_unspsc"
+  ],
+  "periodo_entrenamiento": [
+    "2023-01-01",
+    "2023-02-27"
+  ],
+  "periodo_prueba": [
+    "2023-02-27",
+    "2026-10-27"
+  ],
+  "tasa_prorroga_train": 0.1041,
+  "metricas_prueba": {
+    "PR-AUC (CV train)": 0.389,
+    "PR-AUC": 0.542,
+    "ROC-AUC": 0.821,
+    "Precision": 0.384,
+    "Recall": 0.765,
+    "F1": 0.512
+  },
+  "umbrales_riesgo": {
+    "alto": 0.6,
+    "medio": 0.3
+  },
+  "semilla": 42
+}
