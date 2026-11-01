@@ -23,6 +23,7 @@ data/raw/*.parquet
 data/processed/*.sqlite
 data/processed/*.db
 data/processed/*.npy
+data/processed/*.parquet
 
 # Checkpoints de Jupyter
 .ipynb_checkpoints/

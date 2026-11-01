@@ -12,31 +12,63 @@ for ruta in (PROJECT_ROOT, PROJECT_ROOT / "src"):
         sys.path.insert(0, str(ruta))
 
 import streamlit as st
-from apps.ui_utils import renderizar_aviso_uso_responsable, renderizar_pie_licencia
+from apps.ui_utils import (
+    aplicar_estilo_minimalista,
+    renderizar_aviso_uso_responsable,
+    renderizar_encabezado_institucional,
+    renderizar_pie_licencia,
+)
 from apps.rag_app import renderizar_vista_rag
 from apps.ml_app import renderizar_vista_ml
 
 st.set_page_config(
     page_title="Observatorio Ciudadano SECOP II",
-    page_icon="🏛️",
+    page_icon="⚖️",
     layout="wide",
+    initial_sidebar_state="expanded",
 )
 
-st.title("🏛️ Observatorio Ciudadano de Contratación Pública (SECOP II)")
-renderizar_aviso_uso_responsable()
+# Estilo editorial sobrio
+aplicar_estilo_minimalista()
+
+# Selección de módulo en la barra lateral
+st.sidebar.markdown(
+    """
+    <div class="text-kicker">
+        Navegación del Observatorio
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 modulo = st.sidebar.radio(
-    "Selecciona el Componente:",
+    "Selecciona el Módulo:",
     options=[
-        "A. Asistente Híbrido (RAG Normativo + SQL)",
-        "B. Explorador y Predictor de Prórrogas (ML)",
+        "1. Asistente Híbrido (RAG Normativo + SQL)",
+        "2. Predictor de Riesgo de Prórroga (ML)",
     ],
+    label_visibility="collapsed",
 )
 
-if modulo.startswith("A."):
+st.sidebar.markdown("---")
+st.sidebar.markdown(
+    """
+    <div class="text-muted">
+        <strong>Alcance Territorial:</strong> Valle del Cauca<br>
+        <strong>Periodo:</strong> 2023 - 2026<br>
+        <strong>Datos:</strong> datos.gov.co (SECOP II)
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+if modulo.startswith("1."):
+    renderizar_encabezado_institucional("Módulo A: Asistente Normativo y Consultas Analíticas")
+    renderizar_aviso_uso_responsable()
     renderizar_vista_rag()
 else:
+    renderizar_encabezado_institucional("Módulo B: Estimador de Riesgo de Prórroga al Momento de la Firma")
+    renderizar_aviso_uso_responsable()
     renderizar_vista_ml()
 
-renderizar_pie_licencia()
-
+renderizar_pie_licencia(fecha_corte="2026-10-31")

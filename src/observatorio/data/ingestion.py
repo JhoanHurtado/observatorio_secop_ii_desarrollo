@@ -1,4 +1,4 @@
-"""Descarga reproducible del subconjunto de SECOP II vía API Socrata (RF-2 / RF-ML1)."""
+"""Módulo de ingesta y descarga reproducible del conjunto de contratos de SECOP II vía API Socrata."""
 
 from __future__ import annotations
 
@@ -66,8 +66,30 @@ def descargar_subconjunto_secop(
     ruta_metadatos: Path = RAW_METADATA_PATH,
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
     """
-    Descarga de forma paginada el subconjunto de contratos desde la API Socrata,
-    registra la fecha exacta de consulta y guarda el archivo CSV original en `data/raw/`.
+    Descarga de forma paginada y controlada el registro de contratos públicos desde la API Socrata.
+
+    Qué hace:
+        Consulta el catálogo de Datos Abiertos Colombia mediante filtros geográficos y temporales,
+        recupera los registros en lotes paginados y genera un archivo CSV original acompañado de metadatos.
+
+    Cómo lo hace:
+        1. Configura cabeceras con el token de aplicación de Socrata (si está definido).
+        2. Construye una cláusula WHERE de SoQL filtrando por departamento y rango de firma.
+        3. Realiza peticiones GET iterativas incrementando el parámetro $offset hasta completar el cupo.
+        4. Serializa el DataFrame consolidado a disco y guarda un archivo JSON de trazabilidad.
+
+    Args:
+        departamento: Nombre oficial del departamento territorial a filtrar.
+        fecha_inicio: Fecha ISO mínima de la firma del contrato (YYYY-MM-DD).
+        fecha_fin: Fecha ISO máxima de la firma del contrato (YYYY-MM-DD).
+        batch_size: Cantidad de registros a solicitar por llamada HTTP.
+        max_records: Límite superior global de contratos a descargar.
+        guardar_csv: Si es True, persiste el resultado en disco.
+        ruta_csv: Ruta de destino del archivo CSV con datos crudos.
+        ruta_metadatos: Ruta del archivo JSON con la fecha y parámetros de consulta.
+
+    Returns:
+        Tupla con el DataFrame descargado y el diccionario de metadatos de auditoría.
     """
     endpoint = construir_endpoint_socrata()
     headers: dict[str, str] = {}
