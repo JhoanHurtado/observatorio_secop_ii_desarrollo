@@ -104,12 +104,9 @@ class IndexadorQdrant:
         coll = collection_name or os.getenv("QDRANT_COLLECTION_NAME", "normativa_contratacion")
         model = embedding_model or os.getenv("GEMINI_EMBEDDING_MODEL", "models/gemini-embedding-001")
 
-        if not url or not key:
-            raise ValueError("Faltan QDRANT_URL o QDRANT_API_KEY en el archivo .env.")
-
         # Limpiar comillas, barras o espacios accidentales
-        url = url.strip().strip("'\"").rstrip("/")
-        key = key.strip().strip("'\"")
+        url = url.strip().strip("'\"").rstrip("/") if url else ""
+        key = key.strip().strip("'\"") if key else ""
         gkey = (gkey or "").strip().strip("'\"")
 
         self.collection_name = coll
@@ -126,6 +123,12 @@ class IndexadorQdrant:
         else:
             self.usar_local = usar_local
 
+        # Si no hay credenciales Qdrant, forzar modo local automáticamente
+        if not url or not key:
+            if not self.usar_local:
+                print("⚠️ Faltan QDRANT_URL o QDRANT_API_KEY. Activando modo 100% local (Parquet + sentence-transformers).")
+            self.usar_local = True
+
         self.modelo_local_nombre = (
             modelo_local_nombre or MODELO_EMBEDDING_LOCAL or "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
         )
@@ -133,10 +136,11 @@ class IndexadorQdrant:
         self._modelo_local = None
 
         print(f"🔍 Inicializando IndexadorQdrant en colección '{self.collection_name}'.")
-        print(f"   Qdrant URL: {url}")
+        if url:
+            print(f"   Qdrant URL: {url}")
         print(f"   Modo inicial de embeddings: {'LOCAL (' + self.modelo_local_nombre + ')' if self.usar_local else 'NUBE (Gemini: ' + self.embedding_model + ' con fallback a local)'}")
 
-        self.client = QdrantClient(url=url, api_key=key, timeout=60)
+        self.client = QdrantClient(url=url, api_key=key, timeout=60) if (url and key) else None
         self.ai_client = genai.Client(api_key=gkey) if gkey else None
         self.backup_path: Path = Path(EMBEDDINGS_BACKUP_PATH)
         self._df_parquet_cache: pd.DataFrame | None = None
@@ -178,6 +182,9 @@ class IndexadorQdrant:
         además del índice sobre el campo `documento` para filtrado estructurado.
         Maneja errores de conexión para permitir operación local offline si no hay red.
         """
+        if self.client is None:
+            print("ℹ️ Sin cliente Qdrant — operando exclusivamente sobre respaldo Parquet local.")
+            return
         try:
             if not self.client.collection_exists(self.collection_name):
                 self.client.create_collection(
@@ -444,6 +451,9 @@ class IndexadorQdrant:
         batch_size: int = 100,
     ) -> None:
         """Realiza inserción/actualización por lotes en Qdrant con reintentos y tolerancia a fallos."""
+        if self.client is None:
+            print("⚠️ Sin cliente Qdrant — upsert omitido (modo local).")
+            return
         for i in range(0, len(puntos), batch_size):
             lote_puntos = puntos[i : i + batch_size]
             for intento in range(1, MAX_REINTENTOS + 1):
@@ -523,6 +533,8 @@ class IndexadorQdrant:
 
     def contar_puntos(self) -> int:
         """Devuelve la cantidad exacta de puntos almacenados en la colección de Qdrant."""
+        if self.client is None:
+            return 0
         return int(
             self.client.count(collection_name=self.collection_name, exact=True).count
         )
@@ -608,6 +620,13 @@ class IndexadorQdrant:
                         match=MatchValue(value=filtro_documento),
                     )
                 ]
+            )
+
+        if self.client is None:
+            return self._buscar_similares_en_parquet_local(
+                vector_query=vector_query,
+                top_k=top_k,
+                filtro_documento=filtro_documento,
             )
 
         try:

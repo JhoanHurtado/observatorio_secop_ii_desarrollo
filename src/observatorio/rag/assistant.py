@@ -582,6 +582,22 @@ class AsistenteHibrido:
                 df_sql, sql_ejecutado = self.ejecutar_sql_seguro(sql_query)
             except Exception as e:
                 logger.error("Error ejecutando SQL local: %s", e)
+                if not self.db_path.exists():
+                    respuesta_sin_db = (
+                        "⚠️ **Base de datos de contratos no disponible en este entorno.**\n\n"
+                        "Los datos de SECOP II se generan ejecutando el notebook localmente. "
+                        "En este despliegue solo está disponible la consulta normativa (RAG).\n\n"
+                        "Puedes preguntar sobre leyes, decretos y guías de contratación pública."
+                    )
+                    fuentes = self.buscar_normas(pregunta, top_k=top_k, filtro_documento=filtro_documento)
+                    latencia = round(time.time() - t0, 3)
+                    return RespuestaAsistente(
+                        respuesta=respuesta_sin_db,
+                        tipo_consulta="normativa",
+                        latencia_segundos=latencia,
+                        fuentes_normativas=fuentes,
+                        modo_utilizado="local",
+                    )
                 df_sql = pd.DataFrame([{"error": str(e)}])
                 sql_ejecutado = sql_query
 

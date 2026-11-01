@@ -12,6 +12,14 @@ for ruta in (PROJECT_ROOT, PROJECT_ROOT / "src"):
         sys.path.insert(0, str(ruta))
 
 import streamlit as st
+
+# Inicializar datos y modelo si no existen (primera ejecución en Streamlit Cloud)
+try:
+    from setup_data import inicializar_datos
+    inicializar_datos(verbose=False)
+except Exception as _e:
+    st.warning(f"⚠️ No se pudo completar la inicialización de datos: {_e}")
+
 from apps.ui_utils import (
     aplicar_estilo_minimalista,
     renderizar_aviso_uso_responsable,
