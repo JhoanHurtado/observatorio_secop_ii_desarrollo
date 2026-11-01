@@ -12,6 +12,16 @@ PROJECT_ROOT: Path = Path(__file__).resolve().parents[2]
 # Cargar variables de entorno desde .env si existe (override=True para recargar cambios en Jupyter)
 load_dotenv(PROJECT_ROOT / ".env", override=True)
 
+# Inyectar Streamlit Secrets como variables de entorno si estamos en Streamlit Cloud
+# (los secrets se definen en el panel de la app y no existen en .env)
+try:
+    import streamlit as st
+    for _k, _v in st.secrets.items():
+        if isinstance(_v, str) and _k not in os.environ:
+            os.environ[_k] = _v
+except Exception:
+    pass  # Fuera de Streamlit (notebook, CLI) no hay secrets
+
 # Semilla global de reproducibilidad (RF-ML / RNF)
 RANDOM_SEED: int = 42
 
