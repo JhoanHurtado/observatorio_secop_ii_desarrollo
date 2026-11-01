@@ -16,14 +16,18 @@ __pycache__/
 dist/
 build/
 
-# Datos crudos pesados y bases de datos locales (opcional según política de repositorio)
+# Datos crudos pesados y archivos temporales
 data/raw/*.csv
 data/raw/*.json
 data/raw/*.parquet
-data/processed/*.sqlite
 data/processed/*.db
 data/processed/*.npy
-data/processed/*.parquet
+data/processed/*.csv
+
+# Excepciones para despliegue en la nube (Streamlit Community Cloud / Hugging Face Spaces):
+# Incluir base de datos precomputada y respaldo de embeddings sin superar el límite de GitHub (< 100MB)
+!data/processed/secop_contratos.sqlite
+!data/processed/embeddings_normativa.parquet
 
 # Checkpoints de Jupyter
 .ipynb_checkpoints/

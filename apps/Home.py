@@ -13,12 +13,19 @@ for ruta in (PROJECT_ROOT, PROJECT_ROOT / "src"):
 
 import streamlit as st
 
-# Inicializar datos y modelo si no existen (primera ejecución en Streamlit Cloud)
+st.set_page_config(
+    page_title="Observatorio Ciudadano SECOP II",
+    page_icon="⚖️",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
+# Inicializar datos y modelo si no existen
 try:
     from setup_data import inicializar_datos
     inicializar_datos(verbose=False)
 except Exception as _e:
-    st.warning(f"⚠️ No se pudo completar la inicialización de datos: {_e}")
+    st.warning(f"Aviso de inicialización de datos: {_e}")
 
 from apps.ui_utils import (
     aplicar_estilo_minimalista,
@@ -28,13 +35,6 @@ from apps.ui_utils import (
 )
 from apps.rag_app import renderizar_vista_rag
 from apps.ml_app import renderizar_vista_ml
-
-st.set_page_config(
-    page_title="Observatorio Ciudadano SECOP II",
-    page_icon="⚖️",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
 
 # Estilo editorial sobrio
 aplicar_estilo_minimalista()
